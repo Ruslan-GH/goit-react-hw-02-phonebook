@@ -1,5 +1,7 @@
 .App {
-  text-align: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-logo {
@@ -35,4 +37,19 @@
   to {
     transform: rotate(360deg);
   }
+}
+.FormContainer {
+  display: flex;
+  flex-direction: column;
+}
+.FormContainer__Title {
+  text-align: center;
+  margin-bottom: 0px;
+}
+.FormContainer__Label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }

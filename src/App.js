@@ -1,25 +1,63 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import shortid from 'shortid';
 import './App.css';
+import ContactList from './components/ContactList';
+import contactListData from './contactListData.json';
+import ContactForm from './components/ContactForm';
+import Filter from './components/Filter';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    contacts: contactListData,
+    name: '',
+    number: '',
+    filter: '',
+  };
+
+  deleteContact = contactId => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+    }));
+  };
+  addContact = ({ name, number }) => {
+    const contact = {
+      id: shortid.generate(),
+      name,
+      number,
+    };
+    this.setState(({ contacts }) => ({
+      contacts: [contact, ...contacts],
+    }));
+  };
+  changeFilter = e => {
+    this.setState({ filter: e.currentTarget.value });
+  };
+  getFilterContact = () => {
+    const { filter, contacts } = this.state;
+
+    const normalizedFilter = filter.toLowerCase();
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter),
+    );
+  };
+
+  render() {
+    const { filter } = this.state;
+    const filterContact = this.getFilterContact();
+
+    return (
+      <div className="App">
+        <h1 className="FormContainer__Title">Phonebook</h1>
+        <ContactForm onSubmit={this.addContact} />
+        <Filter value={filter} onChange={this.changeFilter} />
+        <h2 className="FormContainer__Title">Contacts</h2>
+        <ContactList
+          contacts={filterContact}
+          onDeleteContact={this.deleteContact}
+        />
+      </div>
+    );
+  }
 }
 
 export default App;
